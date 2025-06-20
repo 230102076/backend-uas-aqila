@@ -1,68 +1,91 @@
-# CodeIgniter 4 Application Starter
+# Sistem Informasi Rumah Sakit – Backend API (CodeIgniter 4)
+## Deskripsi
+Proyek ini merupakan bagian dari Ujian Akhir Semester mata kuliah Praktikum Pemrograman Berbasis Framework semester genap 2024/2025.
+Backend ini dibangun menggunakan CodeIgniter 4 dan berfungsi sebagai RESTful API untuk mengelola data pasien dan obat.
 
-## What is CodeIgniter?
+ ## Fitur API
+Setiap endpoint mengembalikan response dalam format JSON.
+ ### Pasien
+GET /pasien → Ambil semua data pasien
 
-CodeIgniter is a PHP full-stack web framework that is light, fast, flexible and secure.
-More information can be found at the [official site](https://codeigniter.com).
+GET /pasien/{id} → Ambil detail satu pasien
 
-This repository holds a composer-installable app starter.
-It has been built from the
-[development repository](https://github.com/codeigniter4/CodeIgniter4).
+POST /pasien → Tambah pasien baru
 
-More information about the plans for version 4 can be found in [CodeIgniter 4](https://forum.codeigniter.com/forumdisplay.php?fid=28) on the forums.
+PUT /pasien/{id} → Ubah data pasien
 
-You can read the [user guide](https://codeigniter.com/user_guide/)
-corresponding to the latest version of the framework.
+DELETE /pasien/{id} → Hapus data pasien
 
-## Installation & updates
+### Obat
+GET /obat → Ambil semua data obat
 
-`composer create-project codeigniter4/appstarter` then `composer update` whenever
-there is a new release of the framework.
+GET /obat/{id} → Ambil detail satu obat
 
-When updating, check the release notes to see if there are any changes you might need to apply
-to your `app` folder. The affected files can be copied or merged from
-`vendor/codeigniter4/framework/app`.
+POST /obat → Tambah obat baru
 
-## Setup
+PUT /obat/{id} → Ubah data obat
 
-Copy `env` to `.env` and tailor for your app, specifically the baseURL
-and any database settings.
+DELETE /obat/{id} → Hapus data obat
 
-## Important Change with index.php
+## Struktur Folder Utama
+app/Controllers/ → File controller Pasien.php dan Obat.php
 
-`index.php` is no longer in the root of the project! It has been moved inside the *public* folder,
-for better security and separation of components.
+app/Models/ → Model data untuk interaksi database
 
-This means that you should configure your web server to "point" to your project's *public* folder, and
-not to the project root. A better practice would be to configure a virtual host to point there. A poor practice would be to point your web server to the project root and expect to enter *public/...*, as the rest of your logic and the
-framework are exposed.
+app/Config/Routes.php → Konfigurasi endpoint REST API
 
-**Please** read the user guide for a better explanation of how CI4 works!
+public/ → Root direktori untuk menjalankan server
 
-## Repository Management
+app/Database/ → File migrasi & query builder
 
-We use GitHub issues, in our main repository, to track **BUGS** and to track approved **DEVELOPMENT** work packages.
-We use our [forum](http://forum.codeigniter.com) to provide SUPPORT and to discuss
-FEATURE REQUESTS.
 
-This repository is a "distribution" one, built by our release preparation script.
-Problems with it can be raised on our forum, or as issues in the main repository.
+## Menggunakan Postman untuk menguji endpoint
 
-## Server Requirements
+Backend ini menggunakan CodeIgniter 4 sebagai framework utama, dengan pola RESTful API untuk menangani permintaan HTTP dari frontend.
 
-PHP version 8.1 or higher is required, with the following extensions installed:
+a. Controller
+1. Pasien.php
+File ini menangani seluruh permintaan terkait data pasien, seperti:
 
-- [intl](http://php.net/manual/en/intl.requirements.php)
-- [mbstring](http://php.net/manual/en/mbstring.installation.php)
+Menampilkan semua data (index)
 
-> [!WARNING]
-> - The end of life date for PHP 7.4 was November 28, 2022.
-> - The end of life date for PHP 8.0 was November 26, 2023.
-> - If you are still using PHP 7.4 or 8.0, you should upgrade immediately.
-> - The end of life date for PHP 8.1 will be December 31, 2025.
+Menampilkan data berdasarkan ID (show)
 
-Additionally, make sure that the following extensions are enabled in your PHP:
+Menambahkan data (create)
 
-- json (enabled by default - don't turn it off)
-- [mysqlnd](http://php.net/manual/en/mysqlnd.install.php) if you plan to use MySQL
-- [libcurl](http://php.net/manual/en/curl.requirements.php) if you plan to use the HTTP\CURLRequest library
+Memperbarui data (update)
+
+Menghapus data (delete)
+
+Contoh metode index():
+public function index()
+{
+    $data = $this->pasienModel->findAll();
+    return $this->respond(['data' => $data], 200);
+}
+Setiap respon dikirim dalam bentuk JSON, agar dapat dikonsumsi oleh frontend atau Postman dengan mudah.
+
+## 2. Obat.php
+Strukturnya serupa dengan Pasien.php, namun khusus menangani entitas obat.
+
+Model
+Model (PasienModel dan ObatModel) mengatur interaksi ke database.
+Menggunakan Query Builder bawaan CodeIgniter untuk akses CRUD data secara aman dan efisien.
+
+## Contoh konfigurasi model:
+protected $table = 'pasien';
+protected $allowedFields = ['nama', 'alamat', 'tanggal_lahir', 'jenis_kelamin'];
+
+## Pengujian dengan Postman
+Seluruh endpoint diuji menggunakan Postman, dalam dua grup koleksi:
+
+1. uas_pasien
+
+2. uas_obat
+
+## Masing-masing memiliki 4 metode:
+GET untuk menampilkan data
+POST untuk menambah data
+PUT untuk mengubah data
+DELETE untuk menghapus data
+Setiap request dikonfigurasi dengan URL sesuai endpoint dan dikirim dalam format JSON.
